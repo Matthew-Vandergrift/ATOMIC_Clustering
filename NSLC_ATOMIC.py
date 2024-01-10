@@ -102,6 +102,9 @@ def pure_fitness(indiv, k_s, data_pd):
     f1 = -1 * (n_components-2)**2
     return(f1, size_of_set)
 
+def pure_fitness_dummy(indiv):
+    return (random.randint(-5, 5),sum(indiv.get_vals()))
+
 def tda_eval(indiv): # yet to be tested but in theory sound
     neighbours = indiv.get_neighbours() # list of Individual Objects, assumed to have fitness tuples=(f1, size)
     # Computing Local Competition Score and Sparseness
@@ -113,6 +116,8 @@ def tda_eval(indiv): # yet to be tested but in theory sound
         sparse_total += distance.hamming(indiv.get_vals, i.get_vals)
     sparse_total = sparse_total * (1/len(neighbours))
     return (num_outperformed, sparse_total)
+
+
 
 
 def main():
@@ -135,16 +140,21 @@ def main():
 
     for indiv in pop:
         neighbour_index = neigh.kneighbors([indiv.get_vals()], return_distance=False)
-        print(neighbour_index)
         for j in range(0, len(neighbour_index)+1):
             indiv.add_neighbour(pop[neighbour_index[0,j]]) # Assuming that pop_list and pop have same elements at same indices
-        
-    # By this point each individual has a list of K_NSLC neighbours as an attribute. 
-    # Need to evaluate them then begin the loop. 
+        indiv.update_fitness = pure_fitness_dummy(indiv) # Using a dummy since at home and nice processed data on lab pc. 
+
+    # Currently need to make sure the archive is being tracked. 
+    # Individuals have a percentage (0.05 in novelty paper) to be added to archive. 
+
     g  = 0 
     while g < NUM_GEN:
-     # Actual loop post set up going here 
      g = g + 1 
+     print("Generation :",g)
+     
+     # Select Individuals 
+
+     # Apply crossover and mutuation to selected.
     
     print("Evaluated %i individuals" % len(pop))
         #
