@@ -33,8 +33,14 @@ class Individual:
     def update_neighbours(self, list_of_neighbours): # List of neighbours should be a list of individuals
         self.neighbours = list_of_neighbours
 
+    def add_neighbour(self, new_neighbour):
+        self.neighbours.append(new_neighbour)
+
     def get_neighbours(self):
         return self.neighbours
+    
+    def num_neighbours(self):
+        return len(self.neighbours)
 
     def __gt__(self, other):
         if self.fitness[0] > other.fitness[0]:
@@ -47,9 +53,9 @@ class Individual:
 # Constant defined by the data (can be set up automatically)
 P = 5
 K_S = 3 # Determined through init mode
-data_file = pd.read_csv((r"/home/matthewvandergrift/Desktop/Non-Mod Dataset/mod2_no_outliers.csv"))
-recovered_dataframe = pd.DataFrame(data_file)
-DATA_PD = recovered_dataframe.loc[:, recovered_dataframe.columns != 'Label']
+# data_file = pd.read_csv((r"/home/matthewvandergrift/Desktop/Non-Mod Dataset/mod2_no_outliers.csv"))
+# recovered_dataframe = pd.DataFrame(data_file)
+# DATA_PD = recovered_dataframe.loc[:, recovered_dataframe.columns != 'Label']
 
 # Constants needed for the algorithm
 NUM_GEN = 200
@@ -57,6 +63,7 @@ MU = 100 # number of parents each iteration
 LAM = 100 # size of population
 CXPB = 0.5
 MUTB = 0.3
+K_NSLC = 2
 
 def generate_population(n, p):
     population = []
@@ -68,7 +75,7 @@ def generate_population(n, p):
             ind[random.randint(0, p-1)] = 1
             ind[random.randint(0, p-1)] = 1
 
-        population.append(Individual(lis_of_vals=ind))
+        population.append(Individual(lis_of_vals=ind, neighbours=[]))
     return population
 
 def pure_fitness(indiv, k_s, data_pd):
@@ -117,25 +124,33 @@ def main():
     pop = generate_population(n=LAM, p=P)
 
     # Building the KNN graph
-    neigh = NearestNeighbors(n_neighbors=2, radius=0.4)
-    # Currently challenge is how to set the neighbours of each indiv for each generation.
-    # Don't have to use the class atribute for this but would be nice
+    neigh = NearestNeighbors(n_neighbors=K_NSLC, radius=0.4)
+    # Currently challenge is how to set the neighbours of each indiv for each generation. 
+    # Best startegy would be simply build my own knn method using the class features to avoid the O(num_gen) loop 
+    # tolerating this for now since that would be a day's worth of work before I have seen any results will revisit this. 
+    pop_list = []
+    for i in pop: 
+        pop_list.append(i.get_vals())
+    neigh.fit(pop_list)
 
-
-
-    print("Evaluated %i individuals" % len(pop))
-
-    g = 0
+    for indiv in pop:
+        neighbour_index = neigh.kneighbors([indiv.get_vals()], return_distance=False)
+        print(neighbour_index)
+        for j in range(0, len(neighbour_index)+1):
+            indiv.add_neighbour(pop[neighbour_index[0,j]]) # Assuming that pop_list and pop have same elements at same indices
+        
+    # By this point each individual has a list of K_NSLC neighbours as an attribute. 
+    # Need to evaluate them then begin the loop. 
+    g  = 0 
     while g < NUM_GEN:
-        g = g + 1
-        print("Generation Number :", g)
-
-        # Build KNN graph
-        neigh = NearestNeighbors(n_neighbors=2, radius=0.4)
-        neigh.fit(pop)
+     # Actual loop post set up going here 
+     g = g + 1 
+    
+    print("Evaluated %i individuals" % len(pop))
         #
 
 
 if __name__ == '__main__':
+    print("Hello World!")
     main()
 
