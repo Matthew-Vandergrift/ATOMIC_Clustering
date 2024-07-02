@@ -271,7 +271,9 @@ if __name__ == '__main__':
     embedded = reduction.fit_transform(dataset.to_numpy())
     p_m = dataset.to_numpy().shape[-1]
     
-    # Currently a more advanced method for automatic selection of best results is in progress. 
+    # A more advanced method for automatic selection of best results is being worked on, 
+    # currenly all solutions are saved, and the best ones are visually selected and them combined 
+    # using their indices in the combine.py file. 
     # Storage for storing found solutions
     sols = [] 
     for i in bank: 
