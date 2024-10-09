@@ -4,5 +4,4 @@ A python baesed interpretable clustering method based on the topology of a datas
 The evolutionary portion of algorithm is implemented using the DEAP library which can be found at https://deap.readthedocs.io/en/master/about.html and in “DEAP: Evolutionary Algorithms Made Easy” 
 in Journal of Machine Learning Research, pp. 2171-2175, no 13, jul 2012 by Félix-Antoine Fortin, François-Michel De Rainville, Marc-André Gardner, Marc Parizeau and Christian Gagné.
 
-For a full acounting of this methodology and results when applied to UCI machine learning becnhmark dataset see our paper at: [[LINK] ](https://drive.google.com/file/d/1K3BJdkQp71rjvCZA88OKoi80oOIh3Ifv/view?usp=sharing) 
-Note: link to paper will be updated upon publication in GEECO's Companion Volume.
+For a full acounting of this methodology and results when applied to UCI machine learning becnhmark dataset see our paper at: [[LINK] ](https://dl.acm.org/doi/10.1145/3638530.3654271) 
